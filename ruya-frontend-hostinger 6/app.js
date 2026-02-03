@@ -57,7 +57,7 @@ window.addEventListener('load', () => {
                 setTimeout(() => {
                     loader.style.display = 'none';
                     initAnimations();
-                    // loadServices() loadData() içinde çağrılıyor
+                    loadServices();
                 }, 500);
             }, 300);
         }
