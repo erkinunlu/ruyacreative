@@ -304,69 +304,59 @@ function initThreeJS() {
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero text animation - check if elements exist
-    if (document.querySelector('.hero-title .word')) {
-        gsap.to('.hero-title .word', {
-            y: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: 'power4.out'
-        });
-    }
+    // Hero text animation
+    gsap.to('.hero-title .word', {
+        y: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: 'power4.out'
+    });
 
-    if (document.querySelector('.hero-desc')) {
-        gsap.to('.hero-desc', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.5,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-desc', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.5,
+        ease: 'power3.out'
+    });
 
-    if (document.querySelector('.hero-buttons')) {
-        gsap.to('.hero-buttons', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.7,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-buttons', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.7,
+        ease: 'power3.out'
+    });
 
-    // Stats animation - check if elements exist
-    if (document.querySelector('.stat-item')) {
-        gsap.to('.stat-item', {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            delay: 1,
-            ease: 'power3.out',
-            onComplete: animateCounters
-        });
-    }
+    // Stats animation
+    gsap.to('.stat-item', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        delay: 1,
+        ease: 'power3.out',
+        onComplete: animateCounters
+    });
 
     // Scroll reveal animations
     const reveals = document.querySelectorAll('.reveal');
-    if (reveals.length > 0) {
-        reveals.forEach((el, i) => {
-            gsap.fromTo(el, 
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 85%',
-                        toggleActions: 'play none none none'
-                    }
+    reveals.forEach((el, i) => {
+        gsap.fromTo(el, 
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
                 }
-            );
-        });
-    }
+            }
+        );
+    });
 
     // Service cards and project cards animations are handled in loadServices() and renderProjects()
 }
@@ -645,9 +635,7 @@ function renderDefaultData() {
 // ==========================================
 // CONTACT FORM
 // ==========================================
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const form = e.target;
@@ -678,8 +666,7 @@ if (contactForm) {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
-    });
-}
+});
 
 function showNotification(message, type) {
     const notification = document.createElement('div');

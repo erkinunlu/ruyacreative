@@ -1,6 +1,6 @@
 // ✨ ULTRA PREMIUM MAIN APPLICATION ✨
 
-// API_URL common.js'den geliyor, tekrar tanımlama
+const API_URL = '';
 
 // DOM Elements
 const cursor = document.getElementById('cursor');
@@ -57,7 +57,6 @@ window.addEventListener('load', () => {
                 setTimeout(() => {
                     loader.style.display = 'none';
                     initAnimations();
-                    // loadServices() loadData() içinde çağrılıyor
                 }, 500);
             }, 300);
         }
@@ -66,75 +65,9 @@ window.addEventListener('load', () => {
 });
 
 // ==========================================
-// LOAD SERVICES FROM API
-// ==========================================
-async function loadServices() {
-    const servicesGrid = document.getElementById('servicesGrid');
-    console.log('🚀 loadServices çalıştı, servicesGrid:', servicesGrid);
-    if (!servicesGrid) return;
-    
-    try {
-        console.log('📡 API çağrılıyor:', `${API_URL}/api/services`);
-        const response = await fetch(`${API_URL}/api/services`);
-        console.log('✅ API yanıtı:', response.status);
-        const services = await response.json();
-        console.log('📦 Hizmetler:', services.length, 'adet');
-        
-        if (services.length === 0) {
-            servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Henüz hizmet eklenmemiş.</p>';
-            return;
-        }
-        
-        servicesGrid.innerHTML = services.slice(0, 6).map(service => {
-            // Generate slug from title if not exists
-            const slug = service.slug || service.title.toLowerCase()
-                .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-                .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-                .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-            
-            // Get description
-            const desc = service.shortDescription || 
-                        (service.description ? service.description.substring(0, 100) : '') || 
-                        '';
-            
-            return `
-            <a href="/hizmetler/${slug}" class="service-card reveal">
-                <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
-                    <i class="${service.icon || 'fa-solid fa-star'}"></i>
-                </div>
-                <h3>${service.title}</h3>
-                <p>${desc}</p>
-                <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
-            </a>
-            `;
-        }).join('');
-        
-        // Re-initialize animations for new elements
-        setTimeout(() => {
-            ScrollTrigger.batch('.service-card', {
-                onEnter: (elements) => {
-                    gsap.to(elements, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.8,
-                        stagger: 0.1,
-                        ease: 'power3.out'
-                    });
-                },
-                start: 'top 85%'
-            });
-        }, 100);
-        
-    } catch (error) {
-        console.error('Hizmetler yüklenirken hata:', error);
-        servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Hizmetler yüklenemedi.</p>';
-    }
-}
-
-// ==========================================
 // CUSTOM CURSOR
 // ==========================================
-if (window.matchMedia('(pointer: fine)').matches && cursor) {
+if (window.matchMedia('(pointer: fine)').matches) {
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX - 10 + 'px';
         cursor.style.top = e.clientY - 10 + 'px';
@@ -149,37 +82,33 @@ if (window.matchMedia('(pointer: fine)').matches && cursor) {
 // ==========================================
 // NAVBAR SCROLL EFFECT
 // ==========================================
-if (navbar) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-}
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
 
 // ==========================================
 // MOBILE MENU
 // ==========================================
-if (mobileMenuBtn && mobileMenu && mobileMenuOverlay) {
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('active');
-        mobileMenuOverlay.classList.toggle('active');
-    });
+mobileMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+    mobileMenuOverlay.classList.toggle('active');
+});
 
-    mobileMenuOverlay.addEventListener('click', () => {
+mobileMenuOverlay.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    mobileMenuOverlay.classList.remove('active');
+});
+
+document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
     });
-
-    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-        });
-    });
-}
+});
 
 // ==========================================
 // THREE.JS HERO BACKGROUND
@@ -304,71 +233,91 @@ function initThreeJS() {
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero text animation - check if elements exist
-    if (document.querySelector('.hero-title .word')) {
-        gsap.to('.hero-title .word', {
-            y: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: 'power4.out'
-        });
-    }
+    // Hero text animation
+    gsap.to('.hero-title .word', {
+        y: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: 'power4.out'
+    });
 
-    if (document.querySelector('.hero-desc')) {
-        gsap.to('.hero-desc', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.5,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-desc', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.5,
+        ease: 'power3.out'
+    });
 
-    if (document.querySelector('.hero-buttons')) {
-        gsap.to('.hero-buttons', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.7,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-buttons', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.7,
+        ease: 'power3.out'
+    });
 
-    // Stats animation - check if elements exist
-    if (document.querySelector('.stat-item')) {
-        gsap.to('.stat-item', {
+    // Stats animation
+    gsap.to('.stat-item', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        delay: 1,
+        ease: 'power3.out',
+        onComplete: animateCounters
+    });
+
+    // Scroll reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    reveals.forEach((el, i) => {
+        gsap.fromTo(el, 
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                }
+            }
+        );
+    });
+
+    // Service cards stagger
+    gsap.fromTo('.service-card',
+        { opacity: 0, y: 50 },
+        {
             opacity: 1,
             y: 0,
             duration: 0.6,
             stagger: 0.1,
-            delay: 1,
             ease: 'power3.out',
-            onComplete: animateCounters
-        });
-    }
+            scrollTrigger: {
+                trigger: '#servicesGrid',
+                start: 'top 80%'
+            }
+        }
+    );
 
-    // Scroll reveal animations
-    const reveals = document.querySelectorAll('.reveal');
-    if (reveals.length > 0) {
-        reveals.forEach((el, i) => {
-            gsap.fromTo(el, 
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 85%',
-                        toggleActions: 'play none none none'
-                    }
-                }
-            );
-        });
-    }
-
-    // Service cards and project cards animations are handled in loadServices() and renderProjects()
+    // Project cards stagger
+    gsap.fromTo('.project-card',
+        { opacity: 0, scale: 0.9 },
+        {
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '#projectsGrid',
+                start: 'top 80%'
+            }
+        }
+    );
 }
 
 // ==========================================
@@ -404,8 +353,9 @@ async function loadData() {
         const settings = await fetchData('/api/settings');
         applySettings(settings);
 
-        // Load services - use loadServices instead of renderServices
-        await loadServices();
+        // Load services
+        const services = await fetchData('/api/services');
+        renderServices(services);
 
         // Load projects
         const projects = await fetchData('/api/projects');
@@ -483,31 +433,18 @@ function applySettings(settings) {
 
 function renderServices(services) {
     const container = document.getElementById('servicesGrid');
-    if (!container) return;
-    
-    container.innerHTML = services.slice(0, 6).map((service, index) => {
-        // Generate slug from title if not exists
-        const slug = service.slug || service.title.toLowerCase()
-            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-            .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-        
-        // Get description
-        const desc = service.shortDescription || 
-                    (service.description ? service.description.substring(0, 100) : '') || 
-                    '';
-        
-        return `
-        <a href="/hizmetler/${slug}" class="service-card reveal">
-            <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
-                <i class="${service.icon || 'fa-solid fa-star'}"></i>
+    container.innerHTML = services.map((service, index) => `
+        <div class="service-card" style="--card-color: ${service.color}" data-aos="fade-up" data-aos-delay="${index * 100}">
+            <div class="service-icon">
+                <i class="${service.icon}"></i>
             </div>
-            <h3>${service.title}</h3>
-            <p>${desc}</p>
-            <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
-        </a>
-        `;
-    }).join('');
+            <h3 class="service-title">${service.title}</h3>
+            <p class="service-desc">${service.description}</p>
+            <div class="service-features">
+                ${service.features.map(f => `<span class="service-feature">${f}</span>`).join('')}
+            </div>
+        </div>
+    `).join('');
 }
 
 function renderProjects(projects) {
@@ -645,9 +582,7 @@ function renderDefaultData() {
 // ==========================================
 // CONTACT FORM
 // ==========================================
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const form = e.target;
@@ -678,8 +613,7 @@ if (contactForm) {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
-    });
-}
+});
 
 function showNotification(message, type) {
     const notification = document.createElement('div');
@@ -706,8 +640,8 @@ function showNotification(message, type) {
 }
 
 // Add notification animations
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
+const style = document.createElement('style');
+style.textContent = `
     @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
@@ -717,7 +651,7 @@ notificationStyle.textContent = `
         to { transform: translateX(100%); opacity: 0; }
     }
 `;
-document.head.appendChild(notificationStyle);
+document.head.appendChild(style);
 
 // ==========================================
 // SMOOTH SCROLL
