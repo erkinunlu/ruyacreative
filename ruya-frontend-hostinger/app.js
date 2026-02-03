@@ -719,8 +719,8 @@ function showNotification(message, type) {
 }
 
 // Add notification animations
-const style = document.createElement('style');
-style.textContent = `
+const notificationStyle = document.createElement('style');
+notificationStyle.textContent = `
     @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
@@ -730,7 +730,7 @@ style.textContent = `
         to { transform: translateX(100%); opacity: 0; }
     }
 `;
-document.head.appendChild(style);
+document.head.appendChild(notificationStyle);
 
 // ==========================================
 // SMOOTH SCROLL
