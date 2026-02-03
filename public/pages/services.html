@@ -366,7 +366,14 @@
                     return;
                 }
                 
-                container.innerHTML = services.map((service, index) => `
+                container.innerHTML = services.map((service, index) => {
+                    // Generate slug from title if not exists
+                    const slug = service.slug || service.title.toLowerCase()
+                        .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                        .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                        .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+                    
+                    return `
                     <div class="service-row reveal" style="${index % 2 === 1 ? 'direction: rtl;' : ''}">
                         <div class="service-visual" style="${index % 2 === 1 ? 'direction: ltr;' : ''}">
                             <div class="icon-wrapper" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'});">
@@ -379,10 +386,11 @@
                             <ul class="feature-list">
                                 ${(service.features || []).map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('')}
                             </ul>
-                            <a href="/hizmetler/${service.slug}" class="btn-primary">Detaylı Bilgi</a>
+                            <a href="/hizmetler/${slug}" class="btn-primary">Detaylı Bilgi</a>
                         </div>
                     </div>
-                `).join('');
+                    `;
+                }).join('');
                 
                 // Re-initialize animations
                 if (typeof ScrollTrigger !== 'undefined') {

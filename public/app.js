@@ -81,16 +81,29 @@ async function loadServices() {
             return;
         }
         
-        servicesGrid.innerHTML = services.slice(0, 6).map(service => `
-            <a href="/hizmetler/${service.slug}" class="service-card reveal">
+        servicesGrid.innerHTML = services.slice(0, 6).map(service => {
+            // Generate slug from title if not exists
+            const slug = service.slug || service.title.toLowerCase()
+                .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+                .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+                .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+            
+            // Get description
+            const desc = service.shortDescription || 
+                        (service.description ? service.description.substring(0, 100) : '') || 
+                        '';
+            
+            return `
+            <a href="/hizmetler/${slug}" class="service-card reveal">
                 <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
                     <i class="${service.icon || 'fa-solid fa-star'}"></i>
                 </div>
                 <h3>${service.title}</h3>
-                <p>${service.shortDescription || service.description?.substring(0, 100) || ''}</p>
+                <p>${desc}</p>
                 <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
             </a>
-        `).join('');
+            `;
+        }).join('');
         
         // Re-initialize animations for new elements
         setTimeout(() => {
