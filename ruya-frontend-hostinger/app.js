@@ -70,11 +70,15 @@ window.addEventListener('load', () => {
 // ==========================================
 async function loadServices() {
     const servicesGrid = document.getElementById('servicesGrid');
+    console.log('🚀 loadServices çalıştı, servicesGrid:', servicesGrid);
     if (!servicesGrid) return;
     
     try {
+        console.log('📡 API çağrılıyor:', `${API_URL}/api/services`);
         const response = await fetch(`${API_URL}/api/services`);
+        console.log('✅ API yanıtı:', response.status);
         const services = await response.json();
+        console.log('📦 Hizmetler:', services.length, 'adet');
         
         if (services.length === 0) {
             servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Henüz hizmet eklenmemiş.</p>';
