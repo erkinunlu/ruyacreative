@@ -302,65 +302,7 @@
 
     <!-- Services List -->
     <section class="services-list" id="servicesContainer">
-        <!-- Services will be loaded dynamically -->
-        
-        <!-- Default content if API fails -->
-        <div class="service-row reveal">
-            <div class="service-visual">
-                <div class="icon-wrapper" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
-                    <i class="fa-solid fa-laptop-code"></i>
-                </div>
-            </div>
-            <div class="service-content">
-                <h2>Web Tasarım</h2>
-                <p>Modern, responsive ve kullanıcı dostu web siteleri tasarlıyoruz. Markanızı en iyi şekilde yansıtan, dikkat çekici ve fonksiyonel web tasarımları ile dijital varlığınızı güçlendiriyoruz.</p>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> Responsive Tasarım</li>
-                    <li><i class="fa-solid fa-check"></i> SEO Uyumlu Kodlama</li>
-                    <li><i class="fa-solid fa-check"></i> Hızlı Yükleme Süresi</li>
-                    <li><i class="fa-solid fa-check"></i> Özel Tasarım Çözümleri</li>
-                </ul>
-                <a href="/hizmetler/web-tasarim" class="btn-primary">Detaylı Bilgi</a>
-            </div>
-        </div>
-
-        <div class="service-row reveal">
-            <div class="service-visual">
-                <div class="icon-wrapper" style="background: linear-gradient(135deg, #8b5cf6, #ec4899);">
-                    <i class="fa-solid fa-shopping-cart"></i>
-                </div>
-            </div>
-            <div class="service-content">
-                <h2>E-Ticaret</h2>
-                <p>Satışlarınızı artıracak profesyonel e-ticaret çözümleri. Güvenli ödeme sistemleri, kolay stok yönetimi ve kullanıcı dostu arayüzler ile online satış deneyiminizi iyileştiriyoruz.</p>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> Güvenli Ödeme Sistemleri</li>
-                    <li><i class="fa-solid fa-check"></i> Stok Yönetimi</li>
-                    <li><i class="fa-solid fa-check"></i> Mobil Uyumlu</li>
-                    <li><i class="fa-solid fa-check"></i> Detaylı Raporlama</li>
-                </ul>
-                <a href="/hizmetler/e-ticaret" class="btn-primary">Detaylı Bilgi</a>
-            </div>
-        </div>
-
-        <div class="service-row reveal">
-            <div class="service-visual">
-                <div class="icon-wrapper" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">
-                    <i class="fa-solid fa-palette"></i>
-                </div>
-            </div>
-            <div class="service-content">
-                <h2>Grafik Tasarım</h2>
-                <p>Markanızı öne çıkaracak yaratıcı grafik tasarım çalışmaları. Logo tasarımından kurumsal kimliğe, sosyal medya görsellerinden basılı işlere kadar tüm görsel ihtiyaçlarınızı karşılıyoruz.</p>
-                <ul class="feature-list">
-                    <li><i class="fa-solid fa-check"></i> Logo Tasarımı</li>
-                    <li><i class="fa-solid fa-check"></i> Kurumsal Kimlik</li>
-                    <li><i class="fa-solid fa-check"></i> Sosyal Medya Görselleri</li>
-                    <li><i class="fa-solid fa-check"></i> Basılı İşler</li>
-                </ul>
-                <a href="/hizmetler/grafik-tasarim" class="btn-primary">Detaylı Bilgi</a>
-            </div>
-        </div>
+        <!-- Hizmetler API'den yüklenecek -->
     </section>
 
     <!-- Process Section -->
@@ -407,5 +349,71 @@
     <div id="footer-container"></div>
 
     <script src="/js/common.js"></script>
+    <script>
+        // Load services dynamically
+        const API_URL = "https://ruyacreative-api.onrender.com";
+        
+        async function loadServicesPage() {
+            const container = document.getElementById('servicesContainer');
+            if (!container) return;
+            
+            try {
+                const response = await fetch(`${API_URL}/api/services`);
+                const services = await response.json();
+                
+                if (services.length === 0) {
+                    container.innerHTML = '<p class="text-center" style="padding: 60px; color: var(--text-muted);">Henüz hizmet eklenmemiş.</p>';
+                    return;
+                }
+                
+                container.innerHTML = services.map((service, index) => `
+                    <div class="service-row reveal" style="${index % 2 === 1 ? 'direction: rtl;' : ''}">
+                        <div class="service-visual" style="${index % 2 === 1 ? 'direction: ltr;' : ''}">
+                            <div class="icon-wrapper" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'});">
+                                <i class="${service.icon || 'fa-solid fa-star'}"></i>
+                            </div>
+                        </div>
+                        <div class="service-content" style="${index % 2 === 1 ? 'direction: ltr;' : ''}">
+                            <h2>${service.title}</h2>
+                            <p>${service.description || ''}</p>
+                            <ul class="feature-list">
+                                ${(service.features || []).map(f => `<li><i class="fa-solid fa-check"></i> ${f}</li>`).join('')}
+                            </ul>
+                            <a href="/hizmetler/${service.slug}" class="btn-primary">Detaylı Bilgi</a>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Re-initialize animations
+                if (typeof ScrollTrigger !== 'undefined') {
+                    setTimeout(() => {
+                        ScrollTrigger.batch('.service-row', {
+                            onEnter: (elements) => {
+                                gsap.to(elements, {
+                                    opacity: 1,
+                                    y: 0,
+                                    duration: 0.8,
+                                    stagger: 0.2,
+                                    ease: 'power3.out'
+                                });
+                            },
+                            start: 'top 85%'
+                        });
+                    }, 100);
+                }
+                
+            } catch (error) {
+                console.error('Hizmetler yüklenirken hata:', error);
+                container.innerHTML = '<p class="text-center" style="padding: 60px; color: var(--text-muted);">Hizmetler yüklenemedi. Lütfen sayfayı yenileyin.</p>';
+            }
+        }
+        
+        // Load when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadServicesPage);
+        } else {
+            loadServicesPage();
+        }
+    </script>
 </body>
 </html>

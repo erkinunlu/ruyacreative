@@ -57,12 +57,62 @@ window.addEventListener('load', () => {
                 setTimeout(() => {
                     loader.style.display = 'none';
                     initAnimations();
+                    loadServices();
                 }, 500);
             }, 300);
         }
         loaderProgress.style.width = progress + '%';
     }, 100);
 });
+
+// ==========================================
+// LOAD SERVICES FROM API
+// ==========================================
+async function loadServices() {
+    const servicesGrid = document.getElementById('servicesGrid');
+    if (!servicesGrid) return;
+    
+    try {
+        const response = await fetch(`${API_URL}/api/services`);
+        const services = await response.json();
+        
+        if (services.length === 0) {
+            servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Henüz hizmet eklenmemiş.</p>';
+            return;
+        }
+        
+        servicesGrid.innerHTML = services.slice(0, 6).map(service => `
+            <a href="/hizmetler/${service.slug}" class="service-card reveal">
+                <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
+                    <i class="${service.icon || 'fa-solid fa-star'}"></i>
+                </div>
+                <h3>${service.title}</h3>
+                <p>${service.shortDescription || service.description?.substring(0, 100) || ''}</p>
+                <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
+            </a>
+        `).join('');
+        
+        // Re-initialize animations for new elements
+        setTimeout(() => {
+            ScrollTrigger.batch('.service-card', {
+                onEnter: (elements) => {
+                    gsap.to(elements, {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        stagger: 0.1,
+                        ease: 'power3.out'
+                    });
+                },
+                start: 'top 85%'
+            });
+        }, 100);
+        
+    } catch (error) {
+        console.error('Hizmetler yüklenirken hata:', error);
+        servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Hizmetler yüklenemedi.</p>';
+    }
+}
 
 // ==========================================
 // CUSTOM CURSOR
