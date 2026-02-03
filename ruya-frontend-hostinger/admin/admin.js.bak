@@ -1,10 +1,10 @@
 // Admin Panel JavaScript
-const API_URL = "https://ruyacreative-api.onrender.com";
+const API_URL = '';
 
 // Check authentication
 const token = localStorage.getItem('adminToken');
 if (!token) {
-    window.location.href = 'login.html';
+    window.location.href = '/admin/login';
 }
 
 // Current user info
@@ -833,7 +833,7 @@ function hideLoading() {
 function logout() {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
-    window.location.href = 'login.html';
+    window.location.href = '/admin/login';
 }
 
 // Close modals on overlay click

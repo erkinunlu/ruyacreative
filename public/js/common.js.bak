@@ -1,6 +1,6 @@
 // ✨ ULTRA PREMIUM COMMON JAVASCRIPT ✨
 
-const API_URL = "https://ruyacreative-api.onrender.com";
+const API_URL = '';
 
 // ✨ MAGNETIC CURSOR SYSTEM ✨
 class MagneticCursor {

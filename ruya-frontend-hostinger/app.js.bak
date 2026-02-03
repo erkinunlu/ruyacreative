@@ -1,6 +1,6 @@
 // ✨ ULTRA PREMIUM MAIN APPLICATION ✨
 
-const API_URL = "https://ruyacreative-api.onrender.com";
+const API_URL = '';
 
 // DOM Elements
 const cursor = document.getElementById('cursor');
