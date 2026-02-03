@@ -1,6 +1,6 @@
 // ✨ ULTRA PREMIUM MAIN APPLICATION ✨
 
-const API_URL = "https://ruyacreative-api.onrender.com";
+// API_URL common.js'den geliyor, tekrar tanımlama
 
 // DOM Elements
 const cursor = document.getElementById('cursor');
