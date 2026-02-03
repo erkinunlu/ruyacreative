@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ruyacreative-api
+    runtime: node
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://ruya_admin:OlMHpUM9Dq5orUhK@ruya-cluster.yhgaptx.mongodb.net/ruya_creative?retryWrites=true&w=majority&appName=ruya-cluster
+      - key: JWT_SECRET
+        value: ruya-creative-super-secret-key-2026-change-this
+      - key: ADMIN_EMAIL
+        value: merhaba@ruyacreative.com
+      - key: ADMIN_PASSWORD
+        value: Admin123!
