@@ -134,7 +134,7 @@ async function loadServices() {
 // ==========================================
 // CUSTOM CURSOR
 // ==========================================
-if (window.matchMedia('(pointer: fine)').matches) {
+if (window.matchMedia('(pointer: fine)').matches && cursor) {
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX - 10 + 'px';
         cursor.style.top = e.clientY - 10 + 'px';
@@ -149,33 +149,37 @@ if (window.matchMedia('(pointer: fine)').matches) {
 // ==========================================
 // NAVBAR SCROLL EFFECT
 // ==========================================
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-    } else {
-        navbar.classList.remove('scrolled');
-    }
-});
+if (navbar) {
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+}
 
 // ==========================================
 // MOBILE MENU
 // ==========================================
-mobileMenuBtn.addEventListener('click', () => {
-    mobileMenu.classList.toggle('active');
-    mobileMenuOverlay.classList.toggle('active');
-});
+if (mobileMenuBtn && mobileMenu && mobileMenuOverlay) {
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('active');
+        mobileMenuOverlay.classList.toggle('active');
+    });
 
-mobileMenuOverlay.addEventListener('click', () => {
-    mobileMenu.classList.remove('active');
-    mobileMenuOverlay.classList.remove('active');
-});
-
-document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
+    mobileMenuOverlay.addEventListener('click', () => {
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
     });
-});
+
+    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+        });
+    });
+}
 
 // ==========================================
 // THREE.JS HERO BACKGROUND
@@ -354,37 +358,7 @@ function initAnimations() {
         );
     });
 
-    // Service cards stagger
-    gsap.fromTo('.service-card',
-        { opacity: 0, y: 50 },
-        {
-            opacity: 1,
-            y: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '#servicesGrid',
-                start: 'top 80%'
-            }
-        }
-    );
-
-    // Project cards stagger
-    gsap.fromTo('.project-card',
-        { opacity: 0, scale: 0.9 },
-        {
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: 'power3.out',
-            scrollTrigger: {
-                trigger: '#projectsGrid',
-                start: 'top 80%'
-            }
-        }
-    );
+    // Service cards and project cards animations are handled in loadServices() and renderProjects()
 }
 
 // ==========================================
