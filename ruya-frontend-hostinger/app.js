@@ -433,31 +433,45 @@ function applySettings(settings) {
     }
     
     if (settings.heroTitle) {
-        document.querySelector('.hero-title').innerHTML = `
-            <span class="line"><span class="word">${settings.heroTitle.split(' ').slice(0, -2).join(' ')}</span></span>
-            <span class="line"><span class="word gradient">${settings.heroTitle.split(' ').slice(-2).join(' ')}</span></span>
-        `;
+        const heroTitle = document.querySelector('.hero-title');
+        if (heroTitle) {
+            heroTitle.innerHTML = `
+                <span class="line"><span class="word">${settings.heroTitle.split(' ').slice(0, -2).join(' ')}</span></span>
+                <span class="line"><span class="word gradient">${settings.heroTitle.split(' ').slice(-2).join(' ')}</span></span>
+            `;
+        }
     }
     
     if (settings.heroSubtitle) {
-        document.querySelector('.hero-desc').textContent = settings.heroSubtitle;
+        const heroDesc = document.querySelector('.hero-desc');
+        if (heroDesc) heroDesc.textContent = settings.heroSubtitle;
     }
     
     if (settings.contactEmail) {
-        document.getElementById('contactEmailDisplay').textContent = settings.contactEmail;
-        document.getElementById('footerEmail').textContent = settings.contactEmail;
-        document.getElementById('footerEmail').href = `mailto:${settings.contactEmail}`;
+        const contactEmailDisplay = document.getElementById('contactEmailDisplay');
+        const footerEmail = document.getElementById('footerEmail');
+        if (contactEmailDisplay) contactEmailDisplay.textContent = settings.contactEmail;
+        if (footerEmail) {
+            footerEmail.textContent = settings.contactEmail;
+            footerEmail.href = `mailto:${settings.contactEmail}`;
+        }
     }
     
     if (settings.contactPhone) {
-        document.getElementById('contactPhoneDisplay').textContent = settings.contactPhone;
-        document.getElementById('footerPhone').textContent = settings.contactPhone;
-        document.getElementById('footerPhone').href = `tel:${settings.contactPhone}`;
+        const contactPhoneDisplay = document.getElementById('contactPhoneDisplay');
+        const footerPhone = document.getElementById('footerPhone');
+        if (contactPhoneDisplay) contactPhoneDisplay.textContent = settings.contactPhone;
+        if (footerPhone) {
+            footerPhone.textContent = settings.contactPhone;
+            footerPhone.href = `tel:${settings.contactPhone}`;
+        }
     }
     
     if (settings.contactAddress) {
-        document.getElementById('contactAddressDisplay').textContent = settings.contactAddress;
-        document.getElementById('footerAddress').textContent = settings.contactAddress;
+        const contactAddressDisplay = document.getElementById('contactAddressDisplay');
+        const footerAddress = document.getElementById('footerAddress');
+        if (contactAddressDisplay) contactAddressDisplay.textContent = settings.contactAddress;
+        if (footerAddress) footerAddress.textContent = settings.contactAddress;
     }
 
     // Social links
@@ -512,6 +526,7 @@ function renderServices(services) {
 
 function renderProjects(projects) {
     const container = document.getElementById('projectsGrid');
+    if (!container) return; // Element yoksa çık
     
     const categories = {
         'web-design': 'Web Tasarım',
@@ -540,6 +555,8 @@ function renderProjects(projects) {
 function initProjectFilter() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
+    
+    if (filterBtns.length === 0 || projectCards.length === 0) return;
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
