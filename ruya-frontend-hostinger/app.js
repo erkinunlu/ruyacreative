@@ -420,9 +420,8 @@ async function loadData() {
         const settings = await fetchData('/api/settings');
         applySettings(settings);
 
-        // Load services
-        const services = await fetchData('/api/services');
-        renderServices(services);
+        // Load services - use loadServices instead of renderServices
+        await loadServices();
 
         // Load projects
         const projects = await fetchData('/api/projects');
@@ -500,18 +499,31 @@ function applySettings(settings) {
 
 function renderServices(services) {
     const container = document.getElementById('servicesGrid');
-    container.innerHTML = services.map((service, index) => `
-        <div class="service-card" style="--card-color: ${service.color}" data-aos="fade-up" data-aos-delay="${index * 100}">
-            <div class="service-icon">
-                <i class="${service.icon}"></i>
+    if (!container) return;
+    
+    container.innerHTML = services.slice(0, 6).map((service, index) => {
+        // Generate slug from title if not exists
+        const slug = service.slug || service.title.toLowerCase()
+            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+            .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        
+        // Get description
+        const desc = service.shortDescription || 
+                    (service.description ? service.description.substring(0, 100) : '') || 
+                    '';
+        
+        return `
+        <a href="/hizmetler/${slug}" class="service-card reveal">
+            <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
+                <i class="${service.icon || 'fa-solid fa-star'}"></i>
             </div>
-            <h3 class="service-title">${service.title}</h3>
-            <p class="service-desc">${service.description}</p>
-            <div class="service-features">
-                ${service.features.map(f => `<span class="service-feature">${f}</span>`).join('')}
-            </div>
-        </div>
-    `).join('');
+            <h3>${service.title}</h3>
+            <p>${desc}</p>
+            <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
+        </a>
+        `;
+    }).join('');
 }
 
 function renderProjects(projects) {
