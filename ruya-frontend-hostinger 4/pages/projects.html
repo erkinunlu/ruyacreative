@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projelerimiz | Creative Agency</title>
+    <meta name="description" content="Tamamladığımız web tasarım, e-ticaret ve dijital pazarlama projeleri.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/common.css">
+    
+    <style>
+        .projects-hero {
+            padding: 180px 50px 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+        }
+
+        .projects-hero h1 {
+            font-size: clamp(36px, 5vw, 56px);
+            margin-bottom: 20px;
+        }
+
+        .projects-hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .projects-hero p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 17px;
+        }
+
+        .projects-filter {
+            padding: 40px 50px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .projects-grid {
+            padding: 40px 50px 100px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            display: block;
+            text-decoration: none;
+        }
+
+        .project-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .project-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .project-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 15, 0.95) 0%, transparent 60%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 30px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-category {
+            font-size: 12px;
+            color: var(--primary-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .project-title {
+            font-size: 22px;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .project-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .project-arrow {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark);
+            transform: translateX(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .project-card:hover .project-arrow {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .projects-hero { padding: 140px 20px 60px; }
+            .projects-filter { padding: 30px 20px; }
+            .projects-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 30px 20px 60px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <section class="projects-hero">
+        <div class="page-tag reveal">Portföy</div>
+        <h1 class="reveal">Son <span>Projelerimiz</span></h1>
+        <p class="reveal">Markaların dijital dönüşümüne ortak olduğumuz projelerden bazıları.</p>
+    </section>
+
+    <div class="projects-filter reveal">
+        <button class="filter-btn active" data-filter="all">Tümü</button>
+        <button class="filter-btn" data-filter="web-design">Web Tasarım</button>
+        <button class="filter-btn" data-filter="e-commerce">E-Ticaret</button>
+        <button class="filter-btn" data-filter="graphic-design">Grafik Tasarım</button>
+        <button class="filter-btn" data-filter="seo">SEO</button>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid">
+        <a href="/projeler/e-ticaret-projesi" class="project-card reveal" data-category="e-commerce">
+            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800" alt="E-Ticaret Projesi">
+            <div class="project-overlay">
+                <span class="project-category">E-Ticaret</span>
+                <h3 class="project-title">Modern E-Ticaret Platformu</h3>
+                <p class="project-desc">Büyük ölçekli online satış platformu geliştirme projesi.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+
+        <a href="/projeler/kurumsal-web-sitesi" class="project-card reveal" data-category="web-design">
+            <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=800" alt="Kurumsal Web Sitesi">
+            <div class="project-overlay">
+                <span class="project-category">Web Tasarım</span>
+                <h3 class="project-title">Kurumsal Web Sitesi</h3>
+                <p class="project-desc">Fortune 500 şirketi için modern kurumsal web sitesi.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+
+        <a href="/projeler/marka-kimligi" class="project-card reveal" data-category="graphic-design">
+            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?w=800" alt="Marka Kimliği">
+            <div class="project-overlay">
+                <span class="project-category">Grafik Tasarım</span>
+                <h3 class="project-title">Marka Kimliği Tasarımı</h3>
+                <p class="project-desc">Startup şirketi için kapsamlı marka kimliği çalışması.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+
+        <a href="/projeler/seo-optimizasyonu" class="project-card reveal" data-category="seo">
+            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800" alt="SEO Optimizasyonu">
+            <div class="project-overlay">
+                <span class="project-category">SEO</span>
+                <h3 class="project-title">SEO Optimizasyonu</h3>
+                <p class="project-desc">Organik trafik artışı için kapsamlı SEO stratejisi.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+
+        <a href="/projeler/sosyal-medya-kampanyasi" class="project-card reveal" data-category="web-design">
+            <img src="https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=800" alt="Sosyal Medya Kampanyası">
+            <div class="project-overlay">
+                <span class="project-category">Web Tasarım</span>
+                <h3 class="project-title">Restoran Web Sitesi</h3>
+                <p class="project-desc">Premium restoran için interaktif web sitesi.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+
+        <a href="/projeler/mobile-app" class="project-card reveal" data-category="web-design">
+            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800" alt="Mobile App">
+            <div class="project-overlay">
+                <span class="project-category">Web Tasarım</span>
+                <h3 class="project-title">SaaS Dashboard</h3>
+                <p class="project-desc">Yazılım şirketi için kullanıcı paneli tasarımı.</p>
+            </div>
+            <div class="project-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+        </a>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <script src="/js/common.js"></script>
+    <script>
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const filter = btn.dataset.filter;
+                
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                document.querySelectorAll('.project-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.category === filter) {
+                        card.style.display = 'block';
+                        gsap.fromTo(card, 
+                            { opacity: 0, scale: 0.9 },
+                            { opacity: 1, scale: 1, duration: 0.4 }
+                        );
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1541 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Creative Agency</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #334155;
+            --gray-light: #64748b;
+            --light: #f1f5f9;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--dark-light);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .brand-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--gray-light);
+        }
+
+        .sidebar-nav {
+            padding: 16px 12px;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--gray-light);
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--gray-light);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: var(--gray-light);
+        }
+
+        .btn-logout {
+            width: 36px;
+            height: 36px;
+            background: transparent;
+            border: none;
+            color: var(--gray-light);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        /* Top Header */
+        .top-header {
+            position: sticky;
+            top: 0;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 50;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: var(--success);
+            color: white;
+        }
+
+        /* Content Area */
+        .content-area {
+            padding: 32px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--dark-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.purple {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+        }
+
+        .stat-icon.pink {
+            background: rgba(236, 72, 153, 0.1);
+            color: #ec4899;
+        }
+
+        .stat-icon.teal {
+            background: rgba(20, 184, 166, 0.1);
+            color: #14b8a6;
+        }
+
+        .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .stat-info p {
+            font-size: 14px;
+            color: var(--gray-light);
+        }
+
+        .stat-change {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--dark-light);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 24px 24px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-light);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .data-table td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 14px;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .table-title {
+            font-weight: 600;
+            color: white;
+        }
+
+        .table-desc {
+            color: var(--gray-light);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.inactive {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 8px;
+            color: var(--gray-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-icon.delete:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Section hidden */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Form Styles */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--light);
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-textarea,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-select option {
+            background: var(--dark-light);
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--gray-light);
+            margin-top: 6px;
+        }
+
+        .image-preview {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .placeholder {
+            text-align: center;
+            color: var(--gray-light);
+        }
+
+        .image-preview .placeholder i {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .features-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .feature-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .feature-tag button {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker {
+            width: 50px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--dark-light);
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 10px;
+            color: var(--gray-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .modal-body {
+            padding: 24px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast {
+            background: var(--dark-light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 300px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .toast.success {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+
+        .toast.error {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .toast.success .toast-icon {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 2px;
+        }
+
+        .toast-message {
+            font-size: 13px;
+            color: var(--gray-light);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--gray-light);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            color: var(--gray-light);
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: var(--gray-light);
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-rocket"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Admin Panel</h1>
+                    <p>Yönetim Sistemi</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <p class="nav-title">Ana Menü</p>
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="services">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <span>Hizmetler</span>
+                </a>
+                <a href="#" class="nav-item" data-section="projects">
+                    <i class="fa-solid fa-folder-open"></i>
+                    <span>Projeler</span>
+                </a>
+                <a href="#" class="nav-item" data-section="testimonials">
+                    <i class="fa-solid fa-comments"></i>
+                    <span>Referanslar</span>
+                </a>
+                <a href="#" class="nav-item" data-section="posts">
+                    <i class="fa-solid fa-newspaper"></i>
+                    <span>Blog Yazıları</span>
+                </a>
+                <a href="#" class="nav-item" data-section="pages">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Sayfalar</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <p class="nav-title">İletişim</p>
+                <a href="#" class="nav-item" data-section="messages">
+                    <i class="fa-solid fa-envelope"></i>
+                    <span>Mesajlar</span>
+                    <span class="nav-badge" id="unreadBadge">0</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <p class="nav-title">Ayarlar</p>
+                <a href="#" class="nav-item" data-section="settings">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Site Ayarları</span>
+                </a>
+                <a href="#" class="nav-item" data-section="profile">
+                    <i class="fa-solid fa-user"></i>
+                    <span>Profil</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-card">
+                <div class="user-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Admin</div>
+                    <div class="user-role">Yönetici</div>
+                </div>
+                <button class="btn-logout" id="logoutBtn" title="Çıkış Yap">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="top-header">
+            <h2 class="page-title" id="pageTitle">Dashboard</h2>
+            <div class="header-actions">
+                <a href="/" target="_blank" class="btn-secondary">
+                    <i class="fa-solid fa-external-link-alt"></i>
+                    Siteyi Görüntüle
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <!-- Dashboard Section -->
+            <section class="section active" id="dashboardSection">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fa-solid fa-briefcase"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="servicesCount">0</h3>
+                            <p>Aktif Hizmet</p>
+                            <div class="stat-change positive">
+                                <i class="fa-solid fa-arrow-up"></i> Web, E-Ticaret, SEO
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pink">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="projectsCount">0</h3>
+                            <p>Tamamlanan Proje</p>
+                            <div class="stat-change positive">
+                                <i class="fa-solid fa-check"></i> Portföyde
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon teal">
+                            <i class="fa-solid fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="testimonialsCount">0</h3>
+                            <p>Müşteri Yorumu</p>
+                            <div class="stat-change positive">
+                                <i class="fa-solid fa-star"></i> Referans
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fa-solid fa-envelope"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="messagesCount">0</h3>
+                            <p>Yeni Mesaj</p>
+                            <div class="stat-change positive" id="messagesChange">
+                                <i class="fa-solid fa-inbox"></i> Okunmayan
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Son Aktiviteler</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                            </div>
+                            <h3>Hoş Geldiniz!</h3>
+                            <p>Admin panelinden tüm içeriklerinizi yönetebilirsiniz.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section class="section" id="servicesSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hizmetler</h3>
+                        <button class="btn-primary" onclick="openServiceModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Yeni Hizmet
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Hizmet</th>
+                                        <th>Özellikler</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="servicesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Section -->
+            <section class="section" id="projectsSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Projeler</h3>
+                        <button class="btn-primary" onclick="openProjectModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Yeni Proje
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Proje</th>
+                                        <th>Kategori</th>
+                                        <th>Müşteri</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projectsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials Section -->
+            <section class="section" id="testimonialsSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Müşteri Yorumları</h3>
+                        <button class="btn-primary" onclick="openTestimonialModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Yeni Yorum
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Müşteri</th>
+                                        <th>Yorum</th>
+                                        <th>Puan</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="testimonialsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Posts (Blog) Section -->
+            <section class="section" id="postsSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Blog Yazıları</h3>
+                        <button class="btn-primary" onclick="openPostModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Yeni Yazı
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Başlık</th>
+                                        <th>Kategori</th>
+                                        <th>Tarih</th>
+                                        <th>Görüntülenme</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="postsTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pages Section -->
+            <section class="section" id="pagesSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Sayfalar</h3>
+                        <button class="btn-primary" onclick="openPageModal()">
+                            <i class="fa-solid fa-plus"></i>
+                            Yeni Sayfa
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Sayfa Adı</th>
+                                        <th>Slug</th>
+                                        <th>Navigasyon</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pagesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Messages Section -->
+            <section class="section" id="messagesSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Gelen Mesajlar</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Gönderen</th>
+                                        <th>Konu</th>
+                                        <th>Tarih</th>
+                                        <th>Durum</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="messagesTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="section" id="settingsSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Site Ayarları</h3>
+                        <button class="btn-primary" onclick="saveSettings()">
+                            <i class="fa-solid fa-save"></i>
+                            Kaydet
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <form id="settingsForm">
+                            <h4 style="color: white; margin-bottom: 20px; font-size: 16px;">Genel Ayarlar</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Site Başlığı</label>
+                                    <input type="text" class="form-input" id="siteTitle" placeholder="Site başlığı">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">E-posta Adresi</label>
+                                    <input type="email" class="form-input" id="contactEmail" placeholder="info@ajans.com">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Site Açıklaması</label>
+                                    <textarea class="form-textarea" id="siteDescription" placeholder="Site açıklaması"></textarea>
+                                </div>
+                            </div>
+
+                            <h4 style="color: white; margin: 32px 0 20px; font-size: 16px;">Ana Sayfa</h4>
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label class="form-label">Hero Başlık</label>
+                                    <input type="text" class="form-input" id="heroTitle" placeholder="Ana sayfa başlığı">
+                                </div>
+                                <div class="form-group full-width">
+                                    <label class="form-label">Hero Alt Başlık</label>
+                                    <textarea class="form-textarea" id="heroSubtitle" placeholder="Ana sayfa alt başlığı"></textarea>
+                                </div>
+                            </div>
+
+                            <h4 style="color: white; margin: 32px 0 20px; font-size: 16px;">İletişim Bilgileri</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Telefon</label>
+                                    <input type="text" class="form-input" id="contactPhone" placeholder="+90 555 123 4567">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Adres</label>
+                                    <input type="text" class="form-input" id="contactAddress" placeholder="İstanbul, Türkiye">
+                                </div>
+                            </div>
+
+                            <h4 style="color: white; margin: 32px 0 20px; font-size: 16px;">Sosyal Medya</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Facebook</label>
+                                    <input type="text" class="form-input" id="socialFacebook" placeholder="https://facebook.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Instagram</label>
+                                    <input type="text" class="form-input" id="socialInstagram" placeholder="https://instagram.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Twitter</label>
+                                    <input type="text" class="form-input" id="socialTwitter" placeholder="https://twitter.com/...">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">LinkedIn</label>
+                                    <input type="text" class="form-input" id="socialLinkedin" placeholder="https://linkedin.com/...">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Section -->
+            <section class="section" id="profileSection">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Profil Ayarları</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Ad Soyad</label>
+                                    <input type="text" class="form-input" id="profileName" placeholder="Adınız">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">E-posta</label>
+                                    <input type="email" class="form-input" id="profileEmail" placeholder="E-posta adresiniz" disabled>
+                                </div>
+                            </div>
+
+                            <h4 style="color: white; margin: 32px 0 20px; font-size: 16px;">Şifre Değiştir</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Mevcut Şifre</label>
+                                    <input type="password" class="form-input" id="currentPassword" placeholder="••••••••">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Yeni Şifre</label>
+                                    <input type="password" class="form-input" id="newPassword" placeholder="••••••••">
+                                    <p class="form-hint">En az 6 karakter olmalıdır</p>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn-primary" onclick="saveProfile()">
+                                    <i class="fa-solid fa-save"></i>
+                                    Kaydet
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Service Modal -->
+    <div class="modal-overlay" id="serviceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="serviceModalTitle">Yeni Hizmet</h3>
+                <button class="modal-close" onclick="closeServiceModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <input type="hidden" id="serviceId">
+                    <div class="form-group">
+                        <label class="form-label">Hizmet Adı *</label>
+                        <input type="text" class="form-input" id="serviceTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Açıklama *</label>
+                        <textarea class="form-textarea" id="serviceDescription" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">İkon (Font Awesome)</label>
+                            <input type="text" class="form-input" id="serviceIcon" placeholder="fa-solid fa-paint-brush">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Renk</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" class="color-picker" id="serviceColor" value="#6366f1">
+                                <span id="colorValue">#6366f1</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Özellikler</label>
+                        <div class="input-wrapper" style="display: flex; gap: 8px;">
+                            <input type="text" class="form-input" id="serviceFeature" placeholder="Özellik ekle ve Enter'a bas">
+                        </div>
+                        <div class="features-list" id="serviceFeatures"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeServiceModal()">İptal</button>
+                <button class="btn-primary" onclick="saveService()">
+                    <i class="fa-solid fa-save"></i>
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Modal -->
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="projectModalTitle">Yeni Proje</h3>
+                <button class="modal-close" onclick="closeProjectModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <input type="hidden" id="projectId">
+                    <div class="form-group">
+                        <label class="form-label">Proje Adı *</label>
+                        <input type="text" class="form-input" id="projectTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Açıklama *</label>
+                        <textarea class="form-textarea" id="projectDescription" required></textarea>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Kategori *</label>
+                            <select class="form-select" id="projectCategory" required>
+                                <option value="web-design">Web Tasarım</option>
+                                <option value="e-commerce">E-Ticaret</option>
+                                <option value="graphic-design">Grafik Tasarım</option>
+                                <option value="social-media">Sosyal Medya</option>
+                                <option value="seo">SEO</option>
+                                <option value="branding">Marka Kimliği</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Müşteri</label>
+                            <input type="text" class="form-input" id="projectClient">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Proje Görseli URL</label>
+                        <input type="text" class="form-input" id="projectImage" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Proje Linki</label>
+                        <input type="text" class="form-input" id="projectLink" placeholder="https://...">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeProjectModal()">İptal</button>
+                <button class="btn-primary" onclick="saveProject()">
+                    <i class="fa-solid fa-save"></i>
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonial Modal -->
+    <div class="modal-overlay" id="testimonialModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="testimonialModalTitle">Yeni Yorum</h3>
+                <button class="modal-close" onclick="closeTestimonialModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="testimonialForm">
+                    <input type="hidden" id="testimonialId">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Ad Soyad *</label>
+                            <input type="text" class="form-input" id="testimonialName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Şirket</label>
+                            <input type="text" class="form-input" id="testimonialCompany">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Pozisyon</label>
+                        <input type="text" class="form-input" id="testimonialRole" placeholder="CEO, Müdür, vs.">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Yorum *</label>
+                        <textarea class="form-textarea" id="testimonialContent" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Puan</label>
+                        <select class="form-select" id="testimonialRating">
+                            <option value="5">5 Yıldız ⭐⭐⭐⭐⭐</option>
+                            <option value="4">4 Yıldız ⭐⭐⭐⭐</option>
+                            <option value="3">3 Yıldız ⭐⭐⭐</option>
+                            <option value="2">2 Yıldız ⭐⭐</option>
+                            <option value="1">1 Yıldız ⭐</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeTestimonialModal()">İptal</button>
+                <button class="btn-primary" onclick="saveTestimonial()">
+                    <i class="fa-solid fa-save"></i>
+                    Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Message Modal -->
+    <div class="modal-overlay" id="messageModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Mesaj Detayı</h3>
+                <button class="modal-close" onclick="closeMessageModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="messageContent">
+                    <p><strong>Gönderen:</strong> <span id="msgName"></span></p>
+                    <p><strong>E-posta:</strong> <span id="msgEmail"></span></p>
+                    <p><strong>Telefon:</strong> <span id="msgPhone"></span></p>
+                    <p><strong>Konu:</strong> <span id="msgSubject"></span></p>
+                    <p><strong>Tarih:</strong> <span id="msgDate"></span></p>
+                    <hr style="margin: 16px 0; border-color: rgba(255,255,255,0.1);">
+                    <p><strong>Mesaj:</strong></p>
+                    <p id="msgMessage" style="white-space: pre-wrap;"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeMessageModal()">Kapat</button>
+                <button class="btn-success" onclick="markAsReplied()">
+                    <i class="fa-solid fa-check"></i>
+                    Yanıtlandı Olarak İşaretle
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

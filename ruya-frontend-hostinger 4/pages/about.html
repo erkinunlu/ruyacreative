@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hakkımızda | Rüya Creative</title>
+    <meta name="description" content="Rüya Creative olarak 2021'den beri dijital çözümler sunuyoruz. Tutkuyla çalışan ekibimizle markaları büyütüyoruz.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <link rel="stylesheet" href="/css/common.css">
+    
+    <style>
+        .about-hero {
+            padding: 160px 50px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .about-content h1 {
+            font-size: clamp(36px, 4vw, 52px);
+            margin-bottom: 24px;
+            line-height: 1.2;
+        }
+
+        .about-content h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .about-content p {
+            color: var(--text-muted);
+            font-size: 17px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-image img {
+            width: 100%;
+            border-radius: 24px;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.5);
+        }
+
+        .experience-badge {
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.4);
+        }
+
+        .experience-badge .number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            display: block;
+        }
+
+        .experience-badge .text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .values {
+            padding: 100px 50px;
+            background: var(--dark-light);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 60px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(28px, 4vw, 42px);
+            margin-bottom: 16px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 17px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .value-card {
+            background: var(--dark-lighter);
+            padding: 40px 30px;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .value-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin: 0 auto 24px;
+        }
+
+        .value-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .value-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .timeline {
+            padding: 100px 50px;
+            background: var(--dark-light);
+        }
+
+        .timeline-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 50%;
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: 50%;
+        }
+
+        .timeline-content {
+            background: var(--dark-lighter);
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 400px;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 40px;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 40px;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 4px solid var(--dark);
+        }
+
+        .timeline-year {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .timeline-title {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .cta {
+            padding: 100px 50px;
+        }
+
+        .cta-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 40px;
+            padding: 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        .cta-title {
+            font-size: clamp(32px, 5vw, 48px);
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-desc {
+            font-size: 18px;
+            opacity: 0.9;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-btn {
+            padding: 18px 40px;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 1024px) {
+            .about-hero { padding: 140px 20px 80px; }
+            .about-grid { grid-template-columns: 1fr; gap: 50px; }
+            .about-image { order: -1; }
+            .experience-badge { left: 20px; bottom: -20px; }
+            .values { padding: 80px 20px; }
+            .values-grid { grid-template-columns: repeat(2, 1fr); }
+            .timeline { padding: 80px 20px; }
+            .timeline-container::before { left: 20px; }
+            .timeline-item,
+            .timeline-item:nth-child(even) { padding-left: 60px; padding-right: 0; justify-content: flex-start; }
+            .timeline-dot { left: 20px; }
+            .cta { padding: 60px 20px; }
+            .cta-container { padding: 50px 30px; }
+        }
+
+        @media (max-width: 768px) {
+            .values-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+
+    <section class="about-hero">
+        <div class="about-grid">
+            <div class="about-content reveal">
+                <h1>Rüya Gibi Bir <span>Hikaye</span></h1>
+                <p>2021 yılında tutkulu bir ekip olarak yola çıktık. Bugün 5 yıllık deneyimimizle her projeye aynı heyecanla yaklaşıyoruz.</p>
+                <p>Web tasarım, e-ticaret ve dijital pazarlama alanlarında hizmet veriyoruz. Her projeyi kendi işimiz gibi sahipleniyor, müşterilerimizin dijital başarısına ortak oluyoruz.</p>
+                <a href="/iletisim" class="btn-primary" style="margin-top: 20px;">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    Bize Ulaşın
+                </a>
+            </div>
+            <div class="about-image reveal">
+                <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800" alt="Rüya Creative Ekibi">
+                <div class="experience-badge">
+                    <span class="number">5+</span>
+                    <span class="text">Yıllık Deneyim</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="values">
+        <div class="section-header reveal">
+            <h2>Değerlerimiz</h2>
+            <p>Bizi biz yapan temel prensiplerimiz.</p>
+        </div>
+
+        <div class="values-grid">
+            <div class="value-card reveal">
+                <div class="value-icon">
+                    <i class="fa-solid fa-heart"></i>
+                </div>
+                <h3>Tutku</h3>
+                <p>İşimizi severek yapıyoruz.</p>
+            </div>
+            <div class="value-card reveal">
+                <div class="value-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                </div>
+                <h3>Güven</h3>
+                <p>Şeffaf ve dürüst iletişim.</p>
+            </div>
+            <div class="value-card reveal">
+                <div class="value-icon">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <h3>Kalite</h3>
+                <p>En yüksek standartlar.</p>
+            </div>
+            <div class="value-card reveal">
+                <div class="value-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h3>İş Birliği</h3>
+                <p>Birlikte büyüyoruz.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="timeline">
+        <div class="section-header reveal">
+            <h2>Hikayemiz</h2>
+            <p>Rüya Creative'nin 2021'den bugüne yolculuğu.</p>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-year">2021</div>
+                    <h3 class="timeline-title">Kuruluş</h3>
+                    <p class="timeline-desc">Tutkulu bir vizyonla yola çıktık. Rüya Creative hayata geçti.</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-year">2022</div>
+                    <h3 class="timeline-title">İlk Projeler</h3>
+                    <p class="timeline-desc">İlk müşterilerimizle çalışmaya başladık. Portföyümüzü oluşturduk.</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-year">2024</div>
+                    <h3 class="timeline-title">Büyüme</h3>
+                    <p class="timeline-desc">Daha fazla markaya hizmet vermeye başladık. Ekip ve yeteneklerimizi geliştirdik.</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-content">
+                    <div class="timeline-year">2026</div>
+                    <h3 class="timeline-title">Bugün</h3>
+                    <p class="timeline-desc">5 yıllık deneyimle 50+ projeyi tamamladık. Aynı tutkuyla çalışmaya devam ediyoruz.</p>
+                </div>
+                <div class="timeline-dot"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="cta-container reveal">
+            <h2 class="cta-title">Haydi Tanışalım!</h2>
+            <p class="cta-desc">Dijital çözümler için hemen iletişime geçin.</p>
+            <a href="https://wa.me/905060950835" class="cta-btn" target="_blank">
+                <i class="fa-brands fa-whatsapp"></i>
+                WhatsApp'tan Ulaşın
+            </a>
+        </div>
+    </section>
+
+    <div id="footer-container"></div>
+
+    <script src="/js/common.js"></script>
+</body>
+</html>
