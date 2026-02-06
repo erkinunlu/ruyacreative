@@ -1,0 +1,51 @@
+# Rüya Creative - Apache Rewrite Rules
+RewriteEngine On
+
+# WWW olmayan versiyonu tercih et (isteğe bağlı)
+# RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+# RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+
+# HTTPS'e yönlendir (eğer SSL varsa)
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Dosya ve dizinler varsa direkt göster
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Ana sayfa
+RewriteRule ^$ index.html [L]
+
+# Sayfa yönlendirmeleri
+RewriteRule ^hakkimizda$ pages/about.html [L]
+RewriteRule ^hizmetler$ pages/services.html [L]
+RewriteRule ^hizmetler/(.+)$ pages/service-detail.html [L]
+RewriteRule ^projeler$ pages/projects.html [L]
+RewriteRule ^projeler/(.+)$ pages/project-detail.html [L]
+RewriteRule ^blog$ pages/blog.html [L]
+RewriteRule ^blog/(.+)$ pages/blog-detail.html [L]
+RewriteRule ^ekip$ pages/team.html [L]
+RewriteRule ^iletisim$ pages/contact.html [L]
+
+# Admin panel
+RewriteRule ^admin$ admin/index.html [L]
+RewriteRule ^admin/login$ admin/login.html [L]
+
+# 404 sayfası
+ErrorDocument 404 /pages/404.html
+
+# Cache kontrolü
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$">
+        Header set Cache-Control "max-age=31536000, public"
+    </FilesMatch>
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "max-age=3600, public"
+    </FilesMatch>
+</IfModule>
+
+# Sıkıştırma
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json
+</IfModule>
