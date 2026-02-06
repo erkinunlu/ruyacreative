@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rüya Creative — Dijital Tasarım Stüdyosu</title>
+    <meta name="description" content="İzmir merkezli dijital tasarım stüdyosu.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --white: #fafafa;
+            --gray: #888888;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* ✨ LIQUID GRADIENT CANVAS */
+        #liquid-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* ✨ NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 32px 64px;
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            text-decoration: none;
+            color: var(--black);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+        }
+
+        .nav-cta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            background: var(--black);
+            color: var(--white);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: transform 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: scale(1.05);
+        }
+
+        .menu-btn {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: transparent;
+        }
+
+        .menu-btn:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* ✨ HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 160px 64px 100px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-title {
+            font-size: clamp(60px, 14vw, 200px);
+            font-weight: 800;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            margin-bottom: 60px;
+        }
+
+        .hero-title-line {
+            display: block;
+            overflow: hidden;
+        }
+
+        .hero-title-line span {
+            display: block;
+            transform: translateY(100%);
+            animation: slideUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .hero-title-line:nth-child(1) span { animation-delay: 0.1s; }
+        .hero-title-line:nth-child(2) span { animation-delay: 0.2s; }
+        .hero-title-line:nth-child(3) span { animation-delay: 0.3s; }
+
+        @keyframes slideUp {
+            to { transform: translateY(0); }
+        }
+
+        .hero-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 40px;
+        }
+
+        .hero-desc {
+            font-size: 18px;
+            color: var(--gray);
+            max-width: 400px;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeIn 1s ease 0.8s forwards;
+        }
+
+        .hero-desc strong {
+            color: var(--black);
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--black);
+            text-decoration: none;
+            opacity: 0;
+            animation: fadeIn 1s ease 1s forwards;
+        }
+
+        .hero-cta-arrow {
+            width: 48px;
+            height: 48px;
+            border: 1px solid var(--black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .hero-cta:hover .hero-cta-arrow {
+            background: var(--black);
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        /* ✨ MARQUEE */
+        .marquee {
+            padding: 40px 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(10px);
+        }
+
+        .marquee-track {
+            display: flex;
+            animation: marquee 25s linear infinite;
+        }
+
+        .marquee-item {
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--gray);
+            padding: 0 40px;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .marquee-item::after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--black);
+            border-radius: 50%;
+        }
+
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ✨ SECTION */
+        .section {
+            padding: 140px 64px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 64px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        /* ✨ SERVICES */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .service-card {
+            background: rgba(255,255,255,0.8);
+            padding: 48px 32px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+        }
+
+        .service-card:hover {
+            background: var(--white);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .service-num {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 24px;
+        }
+
+        .service-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        .service-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* ✨ WORKS */
+        .works-list {
+            display: flex;
+            flex-direction: column;
+            gap: 80px;
+        }
+
+        .work-item {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: center;
+            padding: 60px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .work-item:nth-child(even) {
+            grid-template-columns: 1.5fr 1fr;
+            direction: rtl;
+        }
+
+        .work-item:nth-child(even) > * {
+            direction: ltr;
+        }
+
+        .work-image {
+            aspect-ratio: 4/3;
+            background: #e5e5e5;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .work-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .work-item:hover .work-image img {
+            transform: scale(1.05);
+        }
+
+        .work-content {
+            padding: 40px 0;
+        }
+
+        .work-category {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            margin-bottom: 16px;
+        }
+
+        .work-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .work-desc {
+            font-size: 16px;
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 32px;
+        }
+
+        .work-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--black);
+            text-decoration: none;
+            border-bottom: 1px solid var(--black);
+            padding-bottom: 4px;
+        }
+
+        /* ✨ STATS */
+        .stats-section {
+            padding: 100px 64px;
+            background: var(--black);
+            color: var(--white);
+        }
+
+        .stats-grid {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 12px;
+            letter-spacing: -0.04em;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+        }
+
+        /* ✨ CTA */
+        .cta-section {
+            padding: 200px 64px;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta-title {
+            font-size: clamp(48px, 10vw, 120px);
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 40px;
+            letter-spacing: -0.04em;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 20px 48px;
+            background: var(--black);
+            color: var(--white);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        /* ✨ FOOTER */
+        .footer {
+            padding: 80px 64px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .footer-left {
+            max-width: 300px;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 80px;
+        }
+
+        .footer-col h4 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            font-size: 14px;
+            color: var(--black);
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        .footer-col a:hover {
+            opacity: 0.6;
+        }
+
+        /* ✨ RESPONSIVE */
+        @media (max-width: 1024px) {
+            .navbar { padding: 24px 32px; }
+            .hero { padding: 140px 32px 80px; }
+            .hero-title { font-size: clamp(48px, 12vw, 100px); }
+            .section { padding: 100px 32px; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .work-item, .work-item:nth-child(even) {
+                grid-template-columns: 1fr;
+                gap: 40px;
+                direction: ltr;
+            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-content { flex-direction: column; gap: 40px; }
+            .footer-links { flex-wrap: wrap; gap: 40px; }
+        }
+
+        @media (max-width: 640px) {
+            .navbar { padding: 20px 24px; }
+            .hero { padding: 120px 24px 60px; }
+            .hero-bottom { flex-direction: column; align-items: flex-start; }
+            .section { padding: 80px 24px; }
+            .services-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ✨ REVEAL */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LIQUID GRADIENT BACKGROUND -->
+    <canvas id="liquid-canvas"></canvas>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo">RÜYA CREATIVE</a>
+            <div class="nav-right">
+                <span class="nav-label">İzmir, Türkiye</span>
+                <a href="https://wa.me/905060950835" class="nav-cta" target="_blank">
+                    Bize Ulaşın
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <button class="menu-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="hero-title-line"><span>Dijital</span></span>
+                <span class="hero-title-line"><span>Tasarım</span></span>
+                <span class="hero-title-line"><span>Stüdyosu</span></span>
+            </h1>
+            
+            <div class="hero-bottom">
+                <p class="hero-desc">
+                    Web tasarım, marka kimliği ve dijital strateji alanlarında 
+                    markaların <strong>hikayelerini görselleştiriyoruz.</strong>
+                </p>
+                <a href="#works" class="hero-cta">
+                    Projeleri İncele
+                    <span class="hero-cta-arrow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee">
+        <div class="marquee-track">
+            <span class="marquee-item">Web Tasarım</span>
+            <span class="marquee-item">E-Ticaret</span>
+            <span class="marquee-item">Marka Kimliği</span>
+            <span class="marquee-item">UI/UX Tasarım</span>
+            <span class="marquee-item">Dijital Strateji</span>
+            <span class="marquee-item">SEO</span>
+            <span class="marquee-item">Sosyal Medya</span>
+            <span class="marquee-item">Web Tasarım</span>
+            <span class="marquee-item">E-Ticaret</span>
+            <span class="marquee-item">Marka Kimliği</span>
+            <span class="marquee-item">UI/UX Tasarım</span>
+            <span class="marquee-item">Dijital Strateji</span>
+            <span class="marquee-item">SEO</span>
+            <span class="marquee-item">Sosyal Medya</span>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <section class="section">
+        <div class="section-header reveal">
+            <div class="section-label">Hizmetler</div>
+            <h2 class="section-title">Neler Yapıyoruz?</h2>
+        </div>
+
+        <div class="services-grid">
+            <div class="service-card reveal">
+                <div class="service-num">01</div>
+                <h3 class="service-title">Web Tasarım</h3>
+                <p class="service-desc">Modern, responsive ve kullanıcı odaklı web siteleri</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">02</div>
+                <h3 class="service-title">E-Ticaret</h3>
+                <p class="service-desc">Satış odaklı e-ticaret platformları</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">03</div>
+                <h3 class="service-title">Marka Kimliği</h3>
+                <p class="service-desc">Logo ve kurumsal kimlik tasarımları</p>
+            </div>
+            <div class="service-card reveal">
+                <div class="service-num">04</div>
+                <h3 class="service-title">Dijital Strateji</h3>
+                <p class="service-desc">SEO ve dijital pazarlama çözümleri</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKS -->
+    <section class="section" id="works">
+        <div class="section-header reveal">
+            <div class="section-label">Portfolyo</div>
+            <h2 class="section-title">Seçilmiş İşler</h2>
+        </div>
+
+        <div class="works-list">
+            <div class="work-item reveal">
+                <div class="work-content">
+                    <div class="work-category">E-Ticaret</div>
+                    <h3 class="work-title">Luxe Moda Platformu</h3>
+                    <p class="work-desc">Modern bir e-ticaret deneyimi için tasarlanmış, yüksek dönüşüm oranına sahip platform.</p>
+                    <a href="#" class="work-link">Projeyi İncele →</a>
+                </div>
+                <div class="work-image">
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200" alt="Luxe Moda">
+                </div>
+            </div>
+
+            <div class="work-item reveal">
+                <div class="work-image">
+                    <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=1200" alt="Architekt">
+                </div>
+                <div class="work-content">
+                    <div class="work-category">Web Tasarım</div>
+                    <h3 class="work-title">Architekt Studio</h3>
+                    <p class="work-desc">Mimarlık stüdyosu için minimalist ve etkileyici kurumsal web sitesi.</p>
+                    <a href="#" class="work-link">Projeyi İncele →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-item reveal">
+                <div class="stat-number">5+</div>
+                <div class="stat-label">Yıllık Deneyim</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Proje</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Müşteri</div>
+            </div>
+            <div class="stat-item reveal">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Ödül</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="reveal">
+            <h2 class="cta-title">Birlikte<br>Çalışalım</h2>
+            <a href="https://wa.me/905060950835" class="cta-button" target="_blank">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                WhatsApp'tan Ulaş
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-left">
+                <div class="footer-logo">RÜYA CREATIVE</div>
+                <p class="footer-desc">İzmir merkezli dijital tasarım stüdyosu. Markaların dijital dönüşümüne ortak oluyoruz.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-col">
+                    <h4>Hizmetler</h4>
+                    <ul>
+                        <li><a href="#">Web Tasarım</a></li>
+                        <li><a href="#">E-Ticaret</a></li>
+                        <li><a href="#">Marka Kimliği</a></li>
+                        <li><a href="#">Dijital Strateji</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Şirket</h4>
+                    <ul>
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Projeler</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Sosyal</h4>
+                    <ul>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">LinkedIn</a></li>
+                        <li><a href="#">Behance</a></li>
+                        <li><a href="#">Dribbble</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- LIQUID GRADIENT SCRIPT -->
+    <script>
+        const canvas = document.getElementById('liquid-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let mouse = { x: 0, y: 0 };
+        let targetMouse = { x: 0, y: 0 };
+        
+        // Blob class
+        class Blob {
+            constructor(x, y, radius, color, speed) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.color = color;
+                this.speed = speed;
+                this.vx = 0;
+                this.vy = 0;
+                this.targetX = x;
+                this.targetY = y;
+            }
+            
+            update() {
+                // Smooth follow mouse with delay
+                const dx = targetMouse.x - this.x;
+                const dy = targetMouse.y - this.y;
+                
+                this.vx += dx * 0.0003 * this.speed;
+                this.vy += dy * 0.0003 * this.speed;
+                
+                this.vx *= 0.96; // friction
+                this.vy *= 0.96;
+                
+                this.x += this.vx;
+                this.y += this.vy;
+                
+                // Gentle floating
+                this.x += Math.sin(Date.now() * 0.001 * this.speed) * 0.5;
+                this.y += Math.cos(Date.now() * 0.001 * this.speed) * 0.5;
+            }
+            
+            draw() {
+                ctx.beginPath();
+                
+                // Create gradient
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.radius
+                );
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(0.5, this.color.replace('0.4', '0.2'));
+                gradient.addColorStop(1, 'transparent');
+                
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // Create blobs
+        const blobs = [
+            new Blob(0.3, 0.3, 400, 'rgba(147, 112, 219, 0.4)', 1.2),   // Purple
+            new Blob(0.7, 0.4, 350, 'rgba(138, 180, 248, 0.4)', 1.0),   // Blue
+            new Blob(0.5, 0.7, 450, 'rgba(236, 112, 200, 0.4)', 0.8),   // Pink
+            new Blob(0.2, 0.6, 300, 'rgba(129, 199, 212, 0.4)', 1.1),   // Cyan
+            new Blob(0.8, 0.2, 380, 'rgba(167, 139, 250, 0.4)', 0.9),   // Violet
+        ];
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            
+            // Position blobs
+            blobs.forEach(blob => {
+                blob.x = blob.targetX = blob.x * width || blob.x;
+                blob.y = blob.targetY = blob.y * height || blob.y;
+            });
+        }
+        
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            // Smooth mouse interpolation
+            targetMouse.x += (mouse.x - targetMouse.x) * 0.05;
+            targetMouse.y += (mouse.y - targetMouse.y) * 0.05;
+            
+            // Update and draw blobs
+            blobs.forEach(blob => {
+                blob.update();
+                blob.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Mouse move
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        
+        // Touch move
+        window.addEventListener('touchmove', (e) => {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        });
+        
+        // Init
+        resize();
+        animate();
+        window.addEventListener('resize', resize);
+        
+        // Scroll reveal
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        reveals.forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
