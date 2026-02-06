@@ -1,10 +1,12 @@
 // ✨ ULTRA PREMIUM MAIN APPLICATION ✨
 
-// API_URL common.js'den geliyor, tekrar tanımlama
+const API_URL = '';
 
 // DOM Elements
 const cursor = document.getElementById('cursor');
-const navbar = document.querySelector('.navbar');
+const loader = document.getElementById('loader');
+const loaderProgress = document.getElementById('loaderProgress');
+const navbar = document.getElementById('navbar');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
 const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -14,7 +16,7 @@ const magicBg = document.getElementById('magicBg');
 function initMagicBackground() {
     if (!magicBg) return;
     
-    const colors = ['#f97316', '#ea580c', '#fb923c', '#9ca3af', '#6b7280'];
+    const colors = ['#6366f1', '#8b5cf6', '#f43f5e', '#14b8a6', '#f59e0b'];
     const particleCount = 25;
     
     for (let i = 0; i < particleCount; i++) {
@@ -40,82 +42,32 @@ function initMagicBackground() {
 }
 
 // ==========================================
-// INITIALIZE ANIMATIONS ON LOAD
+// LOADER
 // ==========================================
 window.addEventListener('load', () => {
-    initAnimations();
-});
-
-// ==========================================
-// LOAD SERVICES FROM API
-// ==========================================
-async function loadServices() {
-    const servicesGrid = document.getElementById('servicesGrid');
-    console.log('🚀 loadServices çalıştı, servicesGrid:', servicesGrid);
-    if (!servicesGrid) return;
-    
-    try {
-        console.log('📡 API çağrılıyor:', `${API_URL}/api/services`);
-        const response = await fetch(`${API_URL}/api/services`);
-        console.log('✅ API yanıtı:', response.status);
-        const services = await response.json();
-        console.log('📦 Hizmetler:', services.length, 'adet');
-        
-        if (services.length === 0) {
-            servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Henüz hizmet eklenmemiş.</p>';
-            return;
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 15;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    initAnimations();
+                }, 500);
+            }, 300);
         }
-        
-        servicesGrid.innerHTML = services.slice(0, 6).map(service => {
-            // Generate slug from title if not exists
-            const slug = service.slug || service.title.toLowerCase()
-                .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-                .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-                .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-            
-            // Get description
-            const desc = service.shortDescription || 
-                        (service.description ? service.description.substring(0, 100) : '') || 
-                        '';
-            
-            return `
-            <a href="/hizmetler/${slug}" class="service-card reveal">
-                <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
-                    <i class="${service.icon || 'fa-solid fa-star'}"></i>
-                </div>
-                <h3>${service.title}</h3>
-                <p>${desc}</p>
-                <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
-            </a>
-            `;
-        }).join('');
-        
-        // Re-initialize animations for new elements
-        setTimeout(() => {
-            ScrollTrigger.batch('.service-card', {
-                onEnter: (elements) => {
-                    gsap.to(elements, {
-                        opacity: 1,
-                        y: 0,
-                        duration: 0.8,
-                        stagger: 0.1,
-                        ease: 'power3.out'
-                    });
-                },
-                start: 'top 85%'
-            });
-        }, 100);
-        
-    } catch (error) {
-        console.error('Hizmetler yüklenirken hata:', error);
-        servicesGrid.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: var(--text-muted);">Hizmetler yüklenemedi.</p>';
-    }
-}
+        loaderProgress.style.width = progress + '%';
+    }, 100);
+});
 
 // ==========================================
 // CUSTOM CURSOR
 // ==========================================
-if (window.matchMedia('(pointer: fine)').matches && cursor) {
+if (window.matchMedia('(pointer: fine)').matches) {
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX - 10 + 'px';
         cursor.style.top = e.clientY - 10 + 'px';
@@ -130,37 +82,33 @@ if (window.matchMedia('(pointer: fine)').matches && cursor) {
 // ==========================================
 // NAVBAR SCROLL EFFECT
 // ==========================================
-if (navbar) {
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
-}
+window.addEventListener('scroll', () => {
+    if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+    } else {
+        navbar.classList.remove('scrolled');
+    }
+});
 
 // ==========================================
 // MOBILE MENU
 // ==========================================
-if (mobileMenuBtn && mobileMenu && mobileMenuOverlay) {
-    mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('active');
-        mobileMenuOverlay.classList.toggle('active');
-    });
+mobileMenuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('active');
+    mobileMenuOverlay.classList.toggle('active');
+});
 
-    mobileMenuOverlay.addEventListener('click', () => {
+mobileMenuOverlay.addEventListener('click', () => {
+    mobileMenu.classList.remove('active');
+    mobileMenuOverlay.classList.remove('active');
+});
+
+document.querySelectorAll('.mobile-nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
         mobileMenu.classList.remove('active');
         mobileMenuOverlay.classList.remove('active');
     });
-
-    document.querySelectorAll('.mobile-nav-links a').forEach(link => {
-        link.addEventListener('click', () => {
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-        });
-    });
-}
+});
 
 // ==========================================
 // THREE.JS HERO BACKGROUND
@@ -285,71 +233,91 @@ function initThreeJS() {
 function initAnimations() {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Hero text animation - check if elements exist
-    if (document.querySelector('.hero-title .word')) {
-        gsap.to('.hero-title .word', {
-            y: 0,
-            duration: 1,
-            stagger: 0.1,
-            ease: 'power4.out'
-        });
-    }
+    // Hero text animation
+    gsap.to('.hero-title .word', {
+        y: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: 'power4.out'
+    });
 
-    if (document.querySelector('.hero-desc')) {
-        gsap.to('.hero-desc', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.5,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-desc', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.5,
+        ease: 'power3.out'
+    });
 
-    if (document.querySelector('.hero-buttons')) {
-        gsap.to('.hero-buttons', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            delay: 0.7,
-            ease: 'power3.out'
-        });
-    }
+    gsap.to('.hero-buttons', {
+        opacity: 1,
+        y: 0,
+        duration: 0.8,
+        delay: 0.7,
+        ease: 'power3.out'
+    });
 
-    // Stats animation - check if elements exist
-    if (document.querySelector('.stat-item')) {
-        gsap.to('.stat-item', {
+    // Stats animation
+    gsap.to('.stat-item', {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        stagger: 0.1,
+        delay: 1,
+        ease: 'power3.out',
+        onComplete: animateCounters
+    });
+
+    // Scroll reveal animations
+    const reveals = document.querySelectorAll('.reveal');
+    reveals.forEach((el, i) => {
+        gsap.fromTo(el, 
+            { opacity: 0, y: 50 },
+            {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: el,
+                    start: 'top 85%',
+                    toggleActions: 'play none none none'
+                }
+            }
+        );
+    });
+
+    // Service cards stagger
+    gsap.fromTo('.service-card',
+        { opacity: 0, y: 50 },
+        {
             opacity: 1,
             y: 0,
             duration: 0.6,
             stagger: 0.1,
-            delay: 1,
             ease: 'power3.out',
-            onComplete: animateCounters
-        });
-    }
+            scrollTrigger: {
+                trigger: '#servicesGrid',
+                start: 'top 80%'
+            }
+        }
+    );
 
-    // Scroll reveal animations
-    const reveals = document.querySelectorAll('.reveal');
-    if (reveals.length > 0) {
-        reveals.forEach((el, i) => {
-            gsap.fromTo(el, 
-                { opacity: 0, y: 50 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: el,
-                        start: 'top 85%',
-                        toggleActions: 'play none none none'
-                    }
-                }
-            );
-        });
-    }
-
-    // Service cards and project cards animations are handled in loadServices() and renderProjects()
+    // Project cards stagger
+    gsap.fromTo('.project-card',
+        { opacity: 0, scale: 0.9 },
+        {
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '#projectsGrid',
+                start: 'top 80%'
+            }
+        }
+    );
 }
 
 // ==========================================
@@ -385,8 +353,9 @@ async function loadData() {
         const settings = await fetchData('/api/settings');
         applySettings(settings);
 
-        // Load services - use loadServices instead of renderServices
-        await loadServices();
+        // Load services
+        const services = await fetchData('/api/services');
+        renderServices(services);
 
         // Load projects
         const projects = await fetchData('/api/projects');
@@ -414,45 +383,31 @@ function applySettings(settings) {
     }
     
     if (settings.heroTitle) {
-        const heroTitle = document.querySelector('.hero-title');
-        if (heroTitle) {
-            heroTitle.innerHTML = `
-                <span class="line"><span class="word">${settings.heroTitle.split(' ').slice(0, -2).join(' ')}</span></span>
-                <span class="line"><span class="word gradient">${settings.heroTitle.split(' ').slice(-2).join(' ')}</span></span>
-            `;
-        }
+        document.querySelector('.hero-title').innerHTML = `
+            <span class="line"><span class="word">${settings.heroTitle.split(' ').slice(0, -2).join(' ')}</span></span>
+            <span class="line"><span class="word gradient">${settings.heroTitle.split(' ').slice(-2).join(' ')}</span></span>
+        `;
     }
     
     if (settings.heroSubtitle) {
-        const heroDesc = document.querySelector('.hero-desc');
-        if (heroDesc) heroDesc.textContent = settings.heroSubtitle;
+        document.querySelector('.hero-desc').textContent = settings.heroSubtitle;
     }
     
     if (settings.contactEmail) {
-        const contactEmailDisplay = document.getElementById('contactEmailDisplay');
-        const footerEmail = document.getElementById('footerEmail');
-        if (contactEmailDisplay) contactEmailDisplay.textContent = settings.contactEmail;
-        if (footerEmail) {
-            footerEmail.textContent = settings.contactEmail;
-            footerEmail.href = `mailto:${settings.contactEmail}`;
-        }
+        document.getElementById('contactEmailDisplay').textContent = settings.contactEmail;
+        document.getElementById('footerEmail').textContent = settings.contactEmail;
+        document.getElementById('footerEmail').href = `mailto:${settings.contactEmail}`;
     }
     
     if (settings.contactPhone) {
-        const contactPhoneDisplay = document.getElementById('contactPhoneDisplay');
-        const footerPhone = document.getElementById('footerPhone');
-        if (contactPhoneDisplay) contactPhoneDisplay.textContent = settings.contactPhone;
-        if (footerPhone) {
-            footerPhone.textContent = settings.contactPhone;
-            footerPhone.href = `tel:${settings.contactPhone}`;
-        }
+        document.getElementById('contactPhoneDisplay').textContent = settings.contactPhone;
+        document.getElementById('footerPhone').textContent = settings.contactPhone;
+        document.getElementById('footerPhone').href = `tel:${settings.contactPhone}`;
     }
     
     if (settings.contactAddress) {
-        const contactAddressDisplay = document.getElementById('contactAddressDisplay');
-        const footerAddress = document.getElementById('footerAddress');
-        if (contactAddressDisplay) contactAddressDisplay.textContent = settings.contactAddress;
-        if (footerAddress) footerAddress.textContent = settings.contactAddress;
+        document.getElementById('contactAddressDisplay').textContent = settings.contactAddress;
+        document.getElementById('footerAddress').textContent = settings.contactAddress;
     }
 
     // Social links
@@ -478,36 +433,22 @@ function applySettings(settings) {
 
 function renderServices(services) {
     const container = document.getElementById('servicesGrid');
-    if (!container) return;
-    
-    container.innerHTML = services.slice(0, 6).map((service, index) => {
-        // Generate slug from title if not exists
-        const slug = service.slug || service.title.toLowerCase()
-            .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-            .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
-            .replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
-        
-        // Get description
-        const desc = service.shortDescription || 
-                    (service.description ? service.description.substring(0, 100) : '') || 
-                    '';
-        
-        return `
-        <a href="/hizmetler/${slug}" class="service-card reveal">
-            <div class="service-icon" style="background: linear-gradient(135deg, ${service.color || '#6366f1'}, ${service.color2 || '#8b5cf6'}); color: white;">
-                <i class="${service.icon || 'fa-solid fa-star'}"></i>
+    container.innerHTML = services.map((service, index) => `
+        <div class="service-card" style="--card-color: ${service.color}" data-aos="fade-up" data-aos-delay="${index * 100}">
+            <div class="service-icon">
+                <i class="${service.icon}"></i>
             </div>
-            <h3>${service.title}</h3>
-            <p>${desc}</p>
-            <span class="service-link">Detaylı Bilgi <i class="fa-solid fa-arrow-right"></i></span>
-        </a>
-        `;
-    }).join('');
+            <h3 class="service-title">${service.title}</h3>
+            <p class="service-desc">${service.description}</p>
+            <div class="service-features">
+                ${service.features.map(f => `<span class="service-feature">${f}</span>`).join('')}
+            </div>
+        </div>
+    `).join('');
 }
 
 function renderProjects(projects) {
     const container = document.getElementById('projectsGrid');
-    if (!container) return; // Element yoksa çık
     
     const categories = {
         'web-design': 'Web Tasarım',
@@ -536,8 +477,6 @@ function renderProjects(projects) {
 function initProjectFilter() {
     const filterBtns = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
-    
-    if (filterBtns.length === 0 || projectCards.length === 0) return;
 
     filterBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -643,9 +582,7 @@ function renderDefaultData() {
 // ==========================================
 // CONTACT FORM
 // ==========================================
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const form = e.target;
@@ -676,8 +613,7 @@ if (contactForm) {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     }
-    });
-}
+});
 
 function showNotification(message, type) {
     const notification = document.createElement('div');
@@ -704,8 +640,8 @@ function showNotification(message, type) {
 }
 
 // Add notification animations
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
+const style = document.createElement('style');
+style.textContent = `
     @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
@@ -715,7 +651,7 @@ notificationStyle.textContent = `
         to { transform: translateX(100%); opacity: 0; }
     }
 `;
-document.head.appendChild(notificationStyle);
+document.head.appendChild(style);
 
 // ==========================================
 // SMOOTH SCROLL
@@ -734,163 +670,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // ==========================================
-// MOUSE PARALLAX EFFECT
-// ==========================================
-function initMouseParallax() {
-    const hero = document.querySelector('.hero');
-    if (!hero) return;
-    
-    hero.addEventListener('mousemove', (e) => {
-        const shapes = hero.querySelectorAll('.hero-shape');
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        
-        shapes.forEach((shape, index) => {
-            const speed = (index + 1) * 0.5;
-            shape.style.transform = `translate(${x * speed}px, ${y * speed}px)`;
-        });
-    });
-}
-
-// ==========================================
-// TEXT SCRAMBLE EFFECT
-// ==========================================
-class TextScramble {
-    constructor(el) {
-        this.el = el;
-        this.chars = '!<>-_\\/[]{}—=+*^?#________';
-        this.update = this.update.bind(this);
-    }
-    
-    setText(newText) {
-        const oldText = this.el.innerText;
-        const length = Math.max(oldText.length, newText.length);
-        const promise = new Promise((resolve) => this.resolve = resolve);
-        this.queue = [];
-        
-        for (let i = 0; i < length; i++) {
-            const from = oldText[i] || '';
-            const to = newText[i] || '';
-            const start = Math.floor(Math.random() * 40);
-            const end = start + Math.floor(Math.random() * 40);
-            this.queue.push({ from, to, start, end });
-        }
-        
-        cancelAnimationFrame(this.frameRequest);
-        this.frame = 0;
-        this.update();
-        return promise;
-    }
-    
-    update() {
-        let output = '';
-        let complete = 0;
-        
-        for (let i = 0, n = this.queue.length; i < n; i++) {
-            let { from, to, start, end, char } = this.queue[i];
-            
-            if (this.frame >= end) {
-                complete++;
-                output += to;
-            } else if (this.frame >= start) {
-                if (!char || Math.random() < 0.28) {
-                    char = this.randomChar();
-                    this.queue[i].char = char;
-                }
-                output += `<span class="scramble-char">${char}</span>`;
-            } else {
-                output += from;
-            }
-        }
-        
-        this.el.innerHTML = output;
-        
-        if (complete === this.queue.length) {
-            this.resolve();
-        } else {
-            this.frameRequest = requestAnimationFrame(this.update);
-            this.frame++;
-        }
-    }
-    
-    randomChar() {
-        return this.chars[Math.floor(Math.random() * this.chars.length)];
-    }
-}
-
-// ==========================================
-// TILT EFFECT FOR CARDS
-// ==========================================
-function initTiltEffect() {
-    const cards = document.querySelectorAll('.service-card, .project-card');
-    
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            const rotateX = (y - centerY) / 10;
-            const rotateY = (centerX - x) / 10;
-            
-            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
-        });
-    });
-}
-
-// ==========================================
-// MAGNETIC BUTTONS
-// ==========================================
-function initMagneticButtons() {
-    const buttons = document.querySelectorAll('.btn-primary, .btn-secondary');
-    
-    buttons.forEach(btn => {
-        btn.addEventListener('mousemove', (e) => {
-            const rect = btn.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-        });
-        
-        btn.addEventListener('mouseleave', () => {
-            btn.style.transform = 'translate(0, 0)';
-        });
-    });
-}
-
-// ==========================================
 // INITIALIZE
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     initMagicBackground();
     initThreeJS();
-    initMouseParallax();
-    initTiltEffect();
-    initMagneticButtons();
     loadData();
-    
-    // Initialize text scramble for hero title
-    const heroTitle = document.querySelector('.hero-title span');
-    if (heroTitle) {
-        const fx = new TextScramble(heroTitle);
-        let counter = 0;
-        const phrases = ['Dijital Deneyimler', 'Marka Çözümleri', 'Web Tasarımları', 'E-Ticaret Siteleri'];
-        
-        const next = () => {
-            fx.setText(phrases[counter]).then(() => {
-                setTimeout(next, 3000);
-            });
-            counter = (counter + 1) % phrases.length;
-        };
-        
-        setTimeout(next, 2000);
-    }
 });

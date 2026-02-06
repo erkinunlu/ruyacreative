@@ -4,8 +4,6 @@
 
 // DOM Elements
 const cursor = document.getElementById('cursor');
-const loader = document.getElementById('loader');
-const loaderProgress = document.getElementById('loaderProgress');
 const navbar = document.querySelector('.navbar');
 const mobileMenuBtn = document.getElementById('mobileMenuBtn');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -16,7 +14,7 @@ const magicBg = document.getElementById('magicBg');
 function initMagicBackground() {
     if (!magicBg) return;
     
-    const colors = ['#6366f1', '#8b5cf6', '#f43f5e', '#14b8a6', '#f59e0b'];
+    const colors = ['#f97316', '#ea580c', '#fb923c', '#9ca3af', '#6b7280'];
     const particleCount = 25;
     
     for (let i = 0; i < particleCount; i++) {
@@ -42,27 +40,10 @@ function initMagicBackground() {
 }
 
 // ==========================================
-// LOADER
+// INITIALIZE ANIMATIONS ON LOAD
 // ==========================================
 window.addEventListener('load', () => {
-    let progress = 0;
-    const interval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(interval);
-            
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                    initAnimations();
-                    // loadServices() loadData() içinde çağrılıyor
-                }, 500);
-            }, 300);
-        }
-        loaderProgress.style.width = progress + '%';
-    }, 100);
+    initAnimations();
 });
 
 // ==========================================

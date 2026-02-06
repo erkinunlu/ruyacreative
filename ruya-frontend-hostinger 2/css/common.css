@@ -1,23 +1,23 @@
 /* ✨ ULTRA PREMIUM COMMON STYLES ✨ */
 
 :root {
-    --primary: #f97316;
-    --primary-light: #fb923c;
-    --primary-glow: rgba(249, 115, 22, 0.5);
-    --secondary: #ea580c;
-    --secondary-glow: rgba(234, 88, 12, 0.5);
-    --accent: #fb923c;
-    --accent-glow: rgba(251, 146, 60, 0.5);
-    --dark: #1f2937;
-    --dark-light: #374151;
-    --dark-lighter: #4b5563;
-    --gray: #6b7280;
+    --primary: #6366f1;
+    --primary-light: #818cf8;
+    --primary-glow: rgba(99, 102, 241, 0.5);
+    --secondary: #8b5cf6;
+    --secondary-glow: rgba(139, 92, 246, 0.5);
+    --accent: #f43f5e;
+    --accent-glow: rgba(244, 63, 94, 0.5);
+    --dark: #0a0a0f;
+    --dark-light: #12121a;
+    --dark-lighter: #1a1a25;
+    --gray: #334155;
     --text: #f8fafc;
-    --text-muted: #9ca3af;
+    --text-muted: #94a3b8;
     
     /* Glow Colors */
-    --glow-orange: 0 0 20px rgba(249, 115, 22, 0.5);
-    --glow-dark-orange: 0 0 20px rgba(234, 88, 12, 0.5);
+    --glow-blue: 0 0 20px rgba(99, 102, 241, 0.5);
+    --glow-purple: 0 0 20px rgba(139, 92, 246, 0.5);
     --glow-pink: 0 0 20px rgba(236, 72, 153, 0.5);
 }
 
